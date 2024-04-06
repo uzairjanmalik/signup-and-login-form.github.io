@@ -1,80 +1,48 @@
-
-const names = [];
-const pa = []; // Change to an array for password
-const edu = [];
+const users = {}; // Object to store users and passwords
 
 function reg() {
-   const a = document.getElementById("entername").value;
-   const b = document.getElementById("pa").value;
-   const c = document.getElementById("education").value;
+   const username = document.getElementById("entername").value;
+   const password = document.getElementById("pa").value;
+   const education = document.getElementById("education").value;
 
-   if (names.includes(a)) {
-      document.getElementById("hd").innerHTML = `${a} is already taken, try later!`;
-   } else {
-      names.push(a);
-      pa.push(b); // Push password into 'pa' array
-      edu.push(c);
-      if (a.length !== 0 && b.length !== 0 && c.length !== 0) {
-         console.clear();
-         console.log(`NAME: Mr.${a}   password: ${b}   EDUCATION: ${c}`);
-         document.getElementById("dh").innerHTML = `SIGN UP SUCCESSFUL Mr.${a}`;
-         // Clear messages after showing the result
-         setTimeout(() => {
-            document.getElementById("hd").innerHTML = "";
-            document.getElementById("dh").innerHTML = "";
-         }, 3000); // Clear messages after 3 seconds (adjust as needed)
-      } else {
-         document.getElementById("hd").innerHTML = "Fill all the inputs for sign up!";
-      }
+   if (!username || !password || !education) {
+      document.getElementById("hd").innerHTML = "Fill all the inputs for sign up!";
+      return;
    }
+
+   if (users[username]) {
+      document.getElementById("hd").innerHTML = `${username} is already taken, try later!`;
+      return;
+   }
+
+   // Store username and hashed password
+   users[username] = { password: hash(password), education };
+
+   console.log(`NAME: Mr.${username}   EDUCATION: ${education}`);
+   document.getElementById("dh").innerHTML = `SIGN UP SUCCESSFUL Mr.${username}`;
+
+   // Clear messages after showing the result
+   setTimeout(() => {
+      document.getElementById("hd").innerHTML = "";
+      document.getElementById("dh").innerHTML = "";
+   }, 3000); // Clear messages after 3 seconds (adjust as needed)
 }
 
-
-
-
-
-
-
-
-
-// const passwords = [123];
-
-// function log() {
-//    let x = document.getElementById("write").value;
-//    let y = document.getElementById("pass").value;
-   
-//    let index = names.indexOf(x);
-//    let ps = passwords.indexOf(parseInt(y));;
-//    if (index !== -1 && ps !== 0) {
-//       document.getElementById("showme").innerHTML = `Login successful Mr.${x}`;
-//       // document.getElementById("show").innerHTML = ""; // Clear showme message
-//    } else {
-//       document.getElementById("show").innerHTML = `Username not found or incorrect password! Please SIGN UP first. Username: Mr.${x}`;
-//       // document.getElementById("showme").innerHTML = ""; // Clear show message
-//    }
-
-//    // Clear messages after a certain time period (optional)
-//    setTimeout(() => {
-//       document.getElementById("showme").innerHTML = "";
-//       document.getElementById("show").innerHTML = "";
-//    }, 3000); // Clear messages after 3 seconds (adjust as needed)
-// }
-
-const passwords = [123]; // Sample password, replace it with your actual passwords
-
 function log() {
-   let x = document.getElementById("write").value;
-   let y = document.getElementById("pass").value;
-   
-   let ps = passwords.indexOf(parseInt(y)); // ParseInt added to compare numerical values
-   
-   if (ps !== -1 && ps === 0) { // Check if the password exists in the array and matches the first element
-      document.getElementById("showme").innerHTML = `Login successful Mr.${x}`;
-      document.getElementById("show").value = ""; // Clear showme message
-   } else {
-      document.getElementById("show").innerHTML = `Username not found or incorrect password! Please SIGN UP first. Username: Mr.${x}`;
-      document.getElementById("showme").innerHTML = ""; // Clear show message
+   const username = document.getElementById("write").value;
+   const password = document.getElementById("pass").value;
+
+   if (!username || !password) {
+      document.getElementById("show").innerHTML = "Username and password are required!";
+      return;
    }
+
+   if (!users[username] || users[username].password !== hash(password)) {
+      document.getElementById("show").innerHTML = `Username not found or incorrect password! Please SIGN UP first. Username: Mr.${username}`;
+      return;
+   }
+
+   document.getElementById("showme").innerHTML = `Log in successful Mr.${username}`;
 
    // Clear messages after a certain time period (optional)
    setTimeout(() => {
@@ -82,4 +50,11 @@ function log() {
       document.getElementById("show").innerHTML = "";
    }, 3000); // Clear messages after 3 seconds (adjust as needed)
 }
+
+// Hash function for passwords (implement proper hash function)
+function hash(password) {
+   // Implement proper hashing algorithm (e.g., bcrypt, SHA256, etc.)
+   return password; // For illustration purpose, not secure
+}
+
 
